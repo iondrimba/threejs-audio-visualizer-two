@@ -69,6 +69,7 @@
     "jquery": "^2.1.4",
     "page": "^1.6.4",
     "three": "^0.88.0",
-    "three-orbit-controls": "^82.1.0"
+    "three-orbit-controls": "^82.1.0",
+    "threejs-controls": "^1.0.4"
   }
 }
