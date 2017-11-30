@@ -47,6 +47,14 @@ class App {
       this.addCameraControls();
       this.addFloor();
       this.createObj();
+      this.createObj(45);
+      this.createObj(90);
+      this.createObj(135);
+      this.createObj(180);
+      this.createObj(225);
+      this.createObj(270);
+      this.createObj(315);
+      this.createObj(360);
       this.animate();
       this.playSound(file);
     }, 200);
@@ -93,20 +101,34 @@ class App {
   }
 
 
-  createObj() {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshLambertMaterial({
+  createObj(degrees) {
+    var geometry = new THREE.BoxGeometry(1, 1, 1);
+    var material = new THREE.MeshLambertMaterial({
       color: 0x4b12b3
     });
 
-    let obj = new THREE.Mesh(geometry, material);
+    var obj = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1),  new THREE.MeshLambertMaterial({
+      color: 0x4b12b3
+    }));
     obj.castShadow = true;
     obj.receiveShadow = true;
 
-    this.control = new TransformControls( this.camera, this.renderer.domElement );
-    this.control.attach( obj );
+    // this.control = new TransformControls( this.camera, this.renderer.domElement );
+    // this.control.attach( obj );
 
-    this.scene.add(this.control);
+    if(degrees) {
+      console.log('degrees', degrees);
+      //obj.lookAt(1,0,0);
+      obj.matrixAutoUpdate = true;
+      var Per_Frame_Distance = 5;
+      var sin = Math.sin(degrees) * Per_Frame_Distance;
+      var cos = Math.cos(degrees) * Per_Frame_Distance;
+
+      obj.position.set(sin, 0, cos);
+    }
+
+    console.log(obj);
+    //this.scene.add(this.control);
 
     this.scene.add(obj);
   }
@@ -125,12 +147,12 @@ class App {
 
 
   addSpotLight() {
-    const spotLight = new THREE.SpotLight(0xffffff, 1);
+    const spotLight = new THREE.SpotLight(0xffffff);
 
-    spotLight.position.set(0, 20, 0);
+    spotLight.position.set(0, 10, 1);
     spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 4000;
-    spotLight.shadow.mapSize.height = spotLight.shadow.mapSize.width;
+    // spotLight.shadow.mapSize.width = 4000;
+    // spotLight.shadow.mapSize.height = spotLight.shadow.mapSize.width;
 
     this.scene.add(spotLight);
 
@@ -145,7 +167,7 @@ class App {
 
   animate() {
     this.controls.update();
-    this.control.update();
+    //this.control.update();
 
 
     this.renderer.render(this.scene, this.camera);

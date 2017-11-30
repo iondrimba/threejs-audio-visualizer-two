@@ -47,7 +47,7 @@
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
     "karma-babel-preprocessor": "^6.0.1",
-    "karma-browserify": "^5.0.2",
+    "karma-browserify": "^5.1.2",
     "karma-coverage": "^0.5.5",
     "karma-coverage-es6": "^0.2.7",
     "karma-jasmine": "^0.3.7",
@@ -60,7 +60,7 @@
     "phantomjs-prebuilt": "^2.1.5",
     "rename-me": "0.0.11",
     "semver": "^5.1.0",
-    "stringify": "^5.0.0",
+    "stringify": "^5.2.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
   },
@@ -70,6 +70,6 @@
     "page": "^1.6.4",
     "three": "^0.88.0",
     "three-orbit-controls": "^82.1.0",
-    "threejs-controls": "^1.0.4"
+    "threejs-controls": "^1.0.5"
   }
 }
