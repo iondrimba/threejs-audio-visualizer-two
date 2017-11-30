@@ -1,5 +1,6 @@
 import Loader from './loader';
 import OrbitControls from 'threejs-controls/OrbitControls';
+import TransformControls from 'threejs-controls/TransformControls';
 import { TweenMax, Power2 } from 'gsap';
 
 class App {
@@ -18,17 +19,6 @@ class App {
     this.spheres = [];
 
     this.count = 0;
-
-    this.setupAudio();
-    this.createScene();
-    this.createCamera();
-    this.addAmbientLight();
-    this.addSpotLight();
-
-    this.addCameraControls();
-    this.addFloor();
-    this.createObj();
-
     this.percent = 0;
     this.playing = false;
   }
@@ -47,6 +37,16 @@ class App {
 
   complete(file) {
     setTimeout(() => {
+      this.setupAudio();
+      this.createScene();
+      this.createCamera();
+      this.addGrid();
+      this.addAmbientLight();
+      this.addSpotLight();
+
+      this.addCameraControls();
+      this.addFloor();
+      this.createObj();
       this.animate();
       this.playSound(file);
     }, 200);
@@ -66,14 +66,32 @@ class App {
   }
 
   createCamera() {
-    this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
-    this.camera.position.set(0, 15, 0);
+    this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
+    this.camera.position.set(-10, 6, 8);
+
     this.scene.add(this.camera);
+
+    var helper = new THREE.CameraHelper( this.camera );
+    helper.visible = true;
+    //helper.position = this.camera.position;
+    this.scene.add( helper );
   }
 
   addCameraControls() {
     this.controls = new OrbitControls(this.camera);
   }
+
+  addGrid() {
+    const size = 25;
+    const divisions = 25;
+
+    const gridHelper = new THREE.GridHelper(size, divisions);
+    gridHelper.position.set(0, 0, 0);
+    gridHelper.material.opacity = 0.50;
+    gridHelper.material.transparent = true;
+    this.scene.add(gridHelper);
+  }
+
 
   createObj() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -85,11 +103,12 @@ class App {
     obj.castShadow = true;
     obj.receiveShadow = true;
 
-    obj.geometry.verticesNeedUpdate = true;
+    this.control = new TransformControls( this.camera, this.renderer.domElement );
+    this.control.attach( obj );
+
+    this.scene.add(this.control);
 
     this.scene.add(obj);
-
-    return obj;
   }
 
   addFloor() {
@@ -114,6 +133,9 @@ class App {
     spotLight.shadow.mapSize.height = spotLight.shadow.mapSize.width;
 
     this.scene.add(spotLight);
+
+    var spotLightHelper = new THREE.SpotLightHelper( spotLight );
+    this.scene.add( spotLightHelper );
   }
 
   addAmbientLight() {
@@ -122,9 +144,11 @@ class App {
   }
 
   animate() {
-    this.renderer.render(this.scene, this.camera);
-
     this.controls.update();
+    this.control.update();
+
+
+    this.renderer.render(this.scene, this.camera);
 
     requestAnimationFrame(this.animate.bind(this));
   }
