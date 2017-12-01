@@ -10266,18 +10266,43 @@ var App = function () {
 
         _this2.addCameraControls();
         _this2.addFloor();
-        _this2.createObj();
-        _this2.createObj(45);
-        _this2.createObj(90);
-        _this2.createObj(135);
-        _this2.createObj(180);
-        _this2.createObj(225);
-        _this2.createObj(270);
-        _this2.createObj(315);
-        _this2.createObj(360);
+        // this.createObj();
+        // this.createObj(45);
+        // this.createObj(90);
+        // this.createObj(135);
+        // this.createObj(180);
+        // this.createObj(225);
+        // this.createObj(270);
+        // this.createObj(315);
+        // this.createObj(360);
+        _this2.createRingOfSquares(20, 1);
+        _this2.createRingOfSquares(30, 2);
+        _this2.createRingOfSquares(40, 3);
+        _this2.createRingOfSquares(20, 2);
         _this2.animate();
         _this2.playSound(file);
       }, 200);
+    }
+  }, {
+    key: 'createRingOfSquares',
+    value: function createRingOfSquares(count, radius) {
+
+      for (var index = 0; index < count; index++) {
+
+        var l = 360 / count;
+        var obj = this.createObj();
+
+        var sin = Math.sin(l * index) * (radius * 2);
+        var cos = Math.cos(l * index) * (radius * 2);
+
+        console.log(l, index, l * index);
+
+        obj.position.set(sin, 0, cos);
+
+        obj.rotateY(l * index);
+
+        this.scene.add(obj);
+      }
     }
   }, {
     key: 'createScene',
@@ -10326,35 +10351,19 @@ var App = function () {
   }, {
     key: 'createObj',
     value: function createObj(degrees) {
-      var geometry = new THREE.BoxGeometry(1, 1, 1);
+      var size = .5;
+      var geometry = new THREE.BoxGeometry(size, size, size);
       var material = new THREE.MeshLambertMaterial({
         color: 0x4b12b3
       });
 
-      var obj = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshLambertMaterial({
+      var obj = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), new THREE.MeshLambertMaterial({
         color: 0x4b12b3
       }));
       obj.castShadow = true;
       obj.receiveShadow = true;
 
-      // this.control = new TransformControls( this.camera, this.renderer.domElement );
-      // this.control.attach( obj );
-
-      if (degrees) {
-        console.log('degrees', degrees);
-        //obj.lookAt(1,0,0);
-        obj.matrixAutoUpdate = true;
-        var Per_Frame_Distance = 5;
-        var sin = Math.sin(degrees) * Per_Frame_Distance;
-        var cos = Math.cos(degrees) * Per_Frame_Distance;
-
-        obj.position.set(sin, 0, cos);
-      }
-
-      console.log(obj);
-      //this.scene.add(this.control);
-
-      this.scene.add(obj);
+      return obj;
     }
   }, {
     key: 'addFloor',
@@ -10420,7 +10429,7 @@ var App = function () {
       this.bufferLength = this.analyser.frequencyBinCount;
 
       this.frequencyData = new Uint8Array(this.bufferLength);
-      this.audioElement.volume = .01;
+      this.audioElement.volume = .001;
     }
   }, {
     key: 'playSound',

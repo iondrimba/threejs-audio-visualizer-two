@@ -46,18 +46,43 @@ class App {
 
       this.addCameraControls();
       this.addFloor();
-      this.createObj();
-      this.createObj(45);
-      this.createObj(90);
-      this.createObj(135);
-      this.createObj(180);
-      this.createObj(225);
-      this.createObj(270);
-      this.createObj(315);
-      this.createObj(360);
+      // this.createObj();
+      // this.createObj(45);
+      // this.createObj(90);
+      // this.createObj(135);
+      // this.createObj(180);
+      // this.createObj(225);
+      // this.createObj(270);
+      // this.createObj(315);
+      // this.createObj(360);
+      this.createRingOfSquares(20, 1)
+      this.createRingOfSquares(30, 2)
+      this.createRingOfSquares(40, 3)
+      this.createRingOfSquares(20, 2)
       this.animate();
       this.playSound(file);
     }, 200);
+  }
+
+  createRingOfSquares(count, radius) {
+
+    for (let index = 0; index < count; index++) {
+
+      var l = 360 / count;
+      var obj = this.createObj();
+
+      var sin = Math.sin(l*index) * (radius*2);
+      var cos = Math.cos(l*index) * (radius*2);
+
+      console.log(l, index, l*index);
+
+      obj.position.set(sin, 0, cos);
+
+      obj.rotateY(l*index);
+
+      this.scene.add(obj);
+    }
+
   }
 
   createScene() {
@@ -79,10 +104,10 @@ class App {
 
     this.scene.add(this.camera);
 
-    var helper = new THREE.CameraHelper( this.camera );
+    var helper = new THREE.CameraHelper(this.camera);
     helper.visible = true;
     //helper.position = this.camera.position;
-    this.scene.add( helper );
+    this.scene.add(helper);
   }
 
   addCameraControls() {
@@ -102,35 +127,20 @@ class App {
 
 
   createObj(degrees) {
-    var geometry = new THREE.BoxGeometry(1, 1, 1);
+    var size = .5;
+    var geometry = new THREE.BoxGeometry(size, size, size);
     var material = new THREE.MeshLambertMaterial({
       color: 0x4b12b3
     });
 
-    var obj = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1),  new THREE.MeshLambertMaterial({
+    var obj = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), new THREE.MeshLambertMaterial({
       color: 0x4b12b3
     }));
     obj.castShadow = true;
     obj.receiveShadow = true;
 
-    // this.control = new TransformControls( this.camera, this.renderer.domElement );
-    // this.control.attach( obj );
 
-    if(degrees) {
-      console.log('degrees', degrees);
-      //obj.lookAt(1,0,0);
-      obj.matrixAutoUpdate = true;
-      var Per_Frame_Distance = 5;
-      var sin = Math.sin(degrees) * Per_Frame_Distance;
-      var cos = Math.cos(degrees) * Per_Frame_Distance;
-
-      obj.position.set(sin, 0, cos);
-    }
-
-    console.log(obj);
-    //this.scene.add(this.control);
-
-    this.scene.add(obj);
+    return obj;
   }
 
   addFloor() {
@@ -156,8 +166,8 @@ class App {
 
     this.scene.add(spotLight);
 
-    var spotLightHelper = new THREE.SpotLightHelper( spotLight );
-    this.scene.add( spotLightHelper );
+    var spotLightHelper = new THREE.SpotLightHelper(spotLight);
+    this.scene.add(spotLightHelper);
   }
 
   addAmbientLight() {
@@ -192,7 +202,7 @@ class App {
     this.bufferLength = this.analyser.frequencyBinCount;
 
     this.frequencyData = new Uint8Array(this.bufferLength);
-    this.audioElement.volume = .01;
+    this.audioElement.volume = .001;
   }
 
   playSound(file) {
