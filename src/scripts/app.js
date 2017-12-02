@@ -1,6 +1,5 @@
 import Loader from './loader';
 import OrbitControls from 'threejs-controls/OrbitControls';
-import TransformControls from 'threejs-controls/TransformControls';
 import { TweenMax, Power2 } from 'gsap';
 
 class App {
@@ -8,19 +7,19 @@ class App {
 
     this.loader = new Loader();
     this.loader.progress((percent) => {
-      //this.progress(percent);
+      this.progress(percent);
     });
 
     this.loaderBar = document.querySelector('.loader');
 
     this.loader.load('audio.mp3');
     this.loader.complete = this.complete.bind(this);
-    this.totalSpheres = 625;
-    this.spheres = [];
 
     this.count = 0;
     this.percent = 0;
     this.playing = false;
+
+    this.objects = [];
   }
 
   progress(percent) {
@@ -40,36 +39,37 @@ class App {
       this.setupAudio();
       this.createScene();
       this.createCamera();
-      //this.addGrid();
       this.addAmbientLight();
       this.addSpotLight();
 
       this.addCameraControls();
       this.addFloor();
-      this.createRingOfSquares(20, 1)
-      this.createRingOfSquares(30, 2)
-      this.createRingOfSquares(40, 3)
+      this.createRingOfSquares(20, 1, 0x4250ca)
+      this.createRingOfSquares(30, 2, 0x721fa1)
+      this.createRingOfSquares(40, 3, 0xf95c38)
+      this.createRingOfSquares(50, 4, 0x5e0f86)
       this.animate();
       this.playSound(file);
     }, 200);
   }
 
-  createRingOfSquares(count, radius) {
+  createRingOfSquares(count, radius, color) {
 
     for (let index = 0; index < count; index++) {
 
       var l = 360 / count;
-      var pos = this.radians(l*index);
-      var obj = this.createObj();
+      var pos = this.radians(l * index);
+      var obj = this.createObj(color);
+      var distance = (radius * 2);
 
-      var sin = Math.sin(pos) * (radius*2);
-      var cos = Math.cos(pos) * (radius*2);
-
-      console.log(l, index, l*index);
+      var sin = Math.sin(pos) * distance;
+      var cos = Math.cos(pos) * distance;
 
       obj.position.set(sin, 0, cos);
 
       obj.rotateY(pos);
+
+      this.objects.push(obj);
 
       this.scene.add(obj);
     }
@@ -78,7 +78,7 @@ class App {
 
   createScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xffed32);
+    this.scene.background = new THREE.Color(0xf15f48);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -91,14 +91,12 @@ class App {
 
   createCamera() {
     this.camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
-    this.camera.position.set(-10, 6, 8);
+    this.camera.position.set(-10, 16, 8);
 
     this.scene.add(this.camera);
 
     var helper = new THREE.CameraHelper(this.camera);
     helper.visible = true;
-    //helper.position = this.camera.position;
-    //this.scene.add(helper);
   }
 
   addCameraControls() {
@@ -117,32 +115,31 @@ class App {
   }
 
 
-  createObj(degrees) {
+  createObj(color) {
     var size = .5;
-    var geometry = new THREE.BoxGeometry(size, size, size);
-    var material = new THREE.MeshLambertMaterial({
-      color: 0x4b12b3
+    const geometry = new THREE.BoxGeometry(size, size, size);
+    const material = new THREE.MeshLambertMaterial({
+      color: color
     });
 
-    var obj = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), new THREE.MeshLambertMaterial({
-      color: 0x4b12b3
-    }));
+    const obj = new THREE.Mesh(geometry, material);
     obj.castShadow = true;
     obj.receiveShadow = true;
-
 
     return obj;
   }
 
   addFloor() {
 
-    var planeGeometry = new THREE.PlaneGeometry(2000, 2000);
-    planeGeometry.rotateX(- Math.PI / 2);
-    var planeMaterial = new THREE.ShadowMaterial({ opacity: 0.2 });
+    const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
+    const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.05 });
+    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
-    var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    planeGeometry.rotateX(- Math.PI / 2);
+
     plane.position.y = -1;
     plane.receiveShadow = true;
+
     this.scene.add(plane);
   }
 
@@ -150,15 +147,12 @@ class App {
   addSpotLight() {
     const spotLight = new THREE.SpotLight(0xffffff);
 
-    spotLight.position.set(0, 10, 1);
+    spotLight.position.set(0, 20, 1);
     spotLight.castShadow = true;
-    // spotLight.shadow.mapSize.width = 4000;
-    // spotLight.shadow.mapSize.height = spotLight.shadow.mapSize.width;
 
     this.scene.add(spotLight);
 
-    var spotLightHelper = new THREE.SpotLightHelper(spotLight);
-    //this.scene.add(spotLightHelper);
+    const spotLightHelper = new THREE.SpotLightHelper(spotLight);
   }
 
   addAmbientLight() {
@@ -168,17 +162,34 @@ class App {
 
   animate() {
     this.controls.update();
-    //this.control.update();
 
+    this.drawWave();
 
     this.renderer.render(this.scene, this.camera);
 
     requestAnimationFrame(this.animate.bind(this));
   }
 
-
   radians(degrees) {
     return degrees * Math.PI / 180;
+  }
+
+  drawWave() {
+    if (this.playing) {
+
+      this.analyser.getByteFrequencyData(this.frequencyData);
+
+      for (var i = 0; i < 140; i++) {
+        var p = this.frequencyData[i];
+        var s = this.objects[i];
+        var z = s.position;
+
+        TweenMax.to(z, .2, {
+          y: p / 20
+        });
+
+      }
+    }
   }
 
   setupAudio() {
@@ -193,15 +204,18 @@ class App {
     this.bufferLength = this.analyser.frequencyBinCount;
 
     this.frequencyData = new Uint8Array(this.bufferLength);
-    this.audioElement.volume = .001;
+    this.audioElement.volume = .5;
   }
 
   playSound(file) {
-    this.audioElement.src = file;
-    this.audioElement.load();
-    this.audioElement.play();
 
-    this.playing = true;
+    setTimeout(()=>{
+      this.audioElement.src = file;
+      this.audioElement.load();
+      this.audioElement.play();
+
+      this.playing = true;
+    }, 1000);
   }
 }
 

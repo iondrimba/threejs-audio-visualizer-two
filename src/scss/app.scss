@@ -2,8 +2,8 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Ropa Sans', sans-serif;
-  background-color: #FFED32;
-  color: #000;
+  background-color: #f15f48;
+  color: #fff;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -26,13 +26,13 @@ h1 {
   transform-origin: left;
   -webkit-transition: transform .3s cubic-bezier(0.23, 1, 0.32, 1);
   transition: transform .3s cubic-bezier(0.23, 1, 0.32, 1);
-  background: #fc00ff;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, #6000de, #fc00ff);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, #6000de, #fc00ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #751ea1;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #0391fd, #751ea1);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #0391fd, #751ea1); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 a {
-  color: #000 ;
+  color: inherit ;
   text-decoration: none;
 }
 
