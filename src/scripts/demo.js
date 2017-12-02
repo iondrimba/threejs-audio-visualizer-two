@@ -247,7 +247,7 @@ class App {
     this.bufferLength = this.analyser.frequencyBinCount;
 
     this.frequencyData = new Uint8Array(this.bufferLength);
-    this.audioElement.volume = .05;
+    this.audioElement.volume = .5;
 
     this.audioElement.addEventListener('playing', () => {
       this.playing = true;
