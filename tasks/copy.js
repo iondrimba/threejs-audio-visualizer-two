@@ -1,13 +1,13 @@
 var gulp = require('gulp');
 
 module.exports = function () {
-	gulp.src(['./src/scripts/app.js'])
+	gulp.src(['./src/scripts/demo.js'])
 		.pipe(gulp.dest('./public/js'));
 
-	gulp.src(['./src/styles/app.css'])
+	gulp.src(['./src/styles/demo.css'])
 		.pipe(gulp.dest('./public/css'));
 
-	gulp.src(['./src/audio.mp3'])
+	gulp.src(['./src/demo.mp3'])
 		.pipe(gulp.dest('./public/'));
 
 	return gulp.src(['./src/templates/index.html'])

@@ -95,4 +95,4 @@ gulp.task('default', gulpsync.sync(['copy', 'sass', 'eslint', 'browserify', 'bro
 gulp.task('deploy', gulpsync.sync(['copy', 'sass', 'eslint', 'browserify']));
 
 //optimization task isolated because of the asynchronous problems gulp has
-gulp.task('optimize', gulpsync.sync(['copy', 'minify-css']));
+gulp.task('optimize', gulpsync.sync(['uglify', 'minify-css']));

@@ -12,7 +12,7 @@ class App {
 
     this.loaderBar = document.querySelector('.loader');
 
-    this.loader.load('audio.mp3');
+    this.loader.load('demo.mp3');
     this.loader.complete = this.complete.bind(this);
 
     this.count = 0;

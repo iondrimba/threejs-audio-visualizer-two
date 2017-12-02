@@ -3,10 +3,9 @@ var source = require('vinyl-source-stream');
 var streamify = require('gulp-streamify');
 var stringify = require('stringify');
 var browserify = require('browserify');
-var babelify = require("babelify");
+var babelify = require('babelify');
 
-
-module.exports = function() {
+module.exports = function () {
     stringify.registerWithRequire({
         extensions: ['.txt', '.html'],
         minify: true,
@@ -15,7 +14,7 @@ module.exports = function() {
         }
     });
 
-    var bundleStream = browserify('./src/scripts/app.js')
+    var bundleStream = browserify('./src/scripts/demo.js')
         .transform(babelify, {
             'presets': ['es2015']
         })
@@ -23,6 +22,6 @@ module.exports = function() {
         .bundle();
 
     bundleStream
-        .pipe(source('app.js'))
+        .pipe(source('demo.js'))
         .pipe(gulp.dest('./public/js'))
 };
