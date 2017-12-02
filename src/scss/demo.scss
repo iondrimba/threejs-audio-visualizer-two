@@ -16,6 +16,31 @@ h1 {
   color: inherit;
 }
 
+
+button {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.controls {
+  position: absolute;
+  right: 30px;
+  top: 10px;
+}
+
+.play {
+  display: none;
+}
+
+.pause {
+  display: none;
+}
+
+.control-show  {
+  display: block;
+}
+
 .loader {
   position: absolute;
   width: 100%;

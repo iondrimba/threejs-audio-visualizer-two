@@ -36,6 +36,27 @@ class App {
 
   complete(file) {
     setTimeout(() => {
+      this.firstRing = new THREE.Object3D();
+      this.secondRing = new THREE.Object3D();
+      this.thirdRing = new THREE.Object3D();
+      this.fourthRing = new THREE.Object3D();
+
+      this.btnPlay = document.querySelector('.play');
+      this.btnPause = document.querySelector('.pause');
+
+      this.btnPlay.addEventListener('click', () => {
+        this.audioElement.play();
+        this.btnPlay.classList.remove('control-show');
+        this.btnPause.classList.add('control-show');
+
+      });
+
+      this.btnPause.addEventListener('click', () => {
+        this.audioElement.pause();
+        this.btnPause.classList.remove('control-show');
+        this.btnPlay.classList.add('control-show');
+      });
+
       this.setupAudio();
       this.createScene();
       this.createCamera();
@@ -44,16 +65,19 @@ class App {
 
       this.addCameraControls();
       this.addFloor();
-      this.createRingOfSquares(20, 1, 0x4250ca)
-      this.createRingOfSquares(30, 2, 0x721fa1)
-      this.createRingOfSquares(40, 3, 0xf95c38)
-      this.createRingOfSquares(50, 4, 0x5e0f86)
+
+      this.createRingOfSquares(20, 1, 0x4250ca, this.firstRing);
+      this.createRingOfSquares(30, 2, 0x721fa1, this.secondRing);
+      this.createRingOfSquares(40, 3, 0xf95c38, this.thirdRing);
+      this.createRingOfSquares(50, 4, 0x5e0f86, this.fourthRing);
+
       this.animate();
+
       this.playSound(file);
     }, 200);
   }
 
-  createRingOfSquares(count, radius, color) {
+  createRingOfSquares(count, radius, color, group) {
 
     for (let index = 0; index < count; index++) {
 
@@ -71,9 +95,10 @@ class App {
 
       this.objects.push(obj);
 
-      this.scene.add(obj);
+      group.add(obj);
     }
 
+    this.scene.add(group);
   }
 
   createScene() {
@@ -129,10 +154,18 @@ class App {
     return obj;
   }
 
+  onResize() {
+    const ww = window.innerWidth;
+    const wh = window.innerHeight;
+    this.camera.aspect = ww / wh;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(ww, wh);
+  }
+
   addFloor() {
 
     const planeGeometry = new THREE.PlaneGeometry(2000, 2000);
-    const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.05 });
+    const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.08 });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 
     planeGeometry.rotateX(- Math.PI / 2);
@@ -143,6 +176,9 @@ class App {
     this.scene.add(plane);
   }
 
+  moveRingGroup(group, value) {
+    group.rotation.y += value;
+  }
 
   addSpotLight() {
     const spotLight = new THREE.SpotLight(0xffffff);
@@ -187,9 +223,13 @@ class App {
         TweenMax.to(z, .2, {
           y: p / 20
         });
-
       }
     }
+
+    this.moveRingGroup(this.firstRing, .01);
+    this.moveRingGroup(this.secondRing, -.01);
+    this.moveRingGroup(this.thirdRing, .02);
+    this.moveRingGroup(this.fourthRing, -.02);
   }
 
   setupAudio() {
@@ -204,12 +244,22 @@ class App {
     this.bufferLength = this.analyser.frequencyBinCount;
 
     this.frequencyData = new Uint8Array(this.bufferLength);
-    this.audioElement.volume = .5;
+    this.audioElement.volume = .05;
+
+    this.audioElement.addEventListener('playing', () => {
+      this.playing = true;
+    });
+    this.audioElement.addEventListener('pause', () => {
+      this.playing = false;
+    });
+    this.audioElement.addEventListener('ended', () => {
+      this.playing = false;
+    });
   }
 
   playSound(file) {
 
-    setTimeout(()=>{
+    setTimeout(() => {
       this.audioElement.src = file;
       this.audioElement.load();
       this.audioElement.play();
@@ -221,4 +271,6 @@ class App {
 
 window.addEventListener('DOMContentLoaded', () => {
   window.app = new App();
+
+  window.addEventListener('resize', app.onResize.bind(app));
 });
