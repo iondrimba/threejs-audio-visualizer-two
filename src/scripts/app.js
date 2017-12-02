@@ -40,25 +40,15 @@ class App {
       this.setupAudio();
       this.createScene();
       this.createCamera();
-      this.addGrid();
+      //this.addGrid();
       this.addAmbientLight();
       this.addSpotLight();
 
       this.addCameraControls();
       this.addFloor();
-      // this.createObj();
-      // this.createObj(45);
-      // this.createObj(90);
-      // this.createObj(135);
-      // this.createObj(180);
-      // this.createObj(225);
-      // this.createObj(270);
-      // this.createObj(315);
-      // this.createObj(360);
       this.createRingOfSquares(20, 1)
       this.createRingOfSquares(30, 2)
       this.createRingOfSquares(40, 3)
-      this.createRingOfSquares(20, 2)
       this.animate();
       this.playSound(file);
     }, 200);
@@ -69,16 +59,17 @@ class App {
     for (let index = 0; index < count; index++) {
 
       var l = 360 / count;
+      var pos = this.radians(l*index);
       var obj = this.createObj();
 
-      var sin = Math.sin(l*index) * (radius*2);
-      var cos = Math.cos(l*index) * (radius*2);
+      var sin = Math.sin(pos) * (radius*2);
+      var cos = Math.cos(pos) * (radius*2);
 
       console.log(l, index, l*index);
 
       obj.position.set(sin, 0, cos);
 
-      obj.rotateY(l*index);
+      obj.rotateY(pos);
 
       this.scene.add(obj);
     }
@@ -107,7 +98,7 @@ class App {
     var helper = new THREE.CameraHelper(this.camera);
     helper.visible = true;
     //helper.position = this.camera.position;
-    this.scene.add(helper);
+    //this.scene.add(helper);
   }
 
   addCameraControls() {
@@ -167,7 +158,7 @@ class App {
     this.scene.add(spotLight);
 
     var spotLightHelper = new THREE.SpotLightHelper(spotLight);
-    this.scene.add(spotLightHelper);
+    //this.scene.add(spotLightHelper);
   }
 
   addAmbientLight() {

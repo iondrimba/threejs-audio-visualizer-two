@@ -10260,25 +10260,15 @@ var App = function () {
         _this2.setupAudio();
         _this2.createScene();
         _this2.createCamera();
-        _this2.addGrid();
+        //this.addGrid();
         _this2.addAmbientLight();
         _this2.addSpotLight();
 
         _this2.addCameraControls();
         _this2.addFloor();
-        // this.createObj();
-        // this.createObj(45);
-        // this.createObj(90);
-        // this.createObj(135);
-        // this.createObj(180);
-        // this.createObj(225);
-        // this.createObj(270);
-        // this.createObj(315);
-        // this.createObj(360);
         _this2.createRingOfSquares(20, 1);
         _this2.createRingOfSquares(30, 2);
         _this2.createRingOfSquares(40, 3);
-        _this2.createRingOfSquares(20, 2);
         _this2.animate();
         _this2.playSound(file);
       }, 200);
@@ -10290,16 +10280,17 @@ var App = function () {
       for (var index = 0; index < count; index++) {
 
         var l = 360 / count;
+        var pos = this.radians(l * index);
         var obj = this.createObj();
 
-        var sin = Math.sin(l * index) * (radius * 2);
-        var cos = Math.cos(l * index) * (radius * 2);
+        var sin = Math.sin(pos) * (radius * 2);
+        var cos = Math.cos(pos) * (radius * 2);
 
         console.log(l, index, l * index);
 
         obj.position.set(sin, 0, cos);
 
-        obj.rotateY(l * index);
+        obj.rotateY(pos);
 
         this.scene.add(obj);
       }
@@ -10329,7 +10320,7 @@ var App = function () {
       var helper = new THREE.CameraHelper(this.camera);
       helper.visible = true;
       //helper.position = this.camera.position;
-      this.scene.add(helper);
+      //this.scene.add(helper);
     }
   }, {
     key: 'addCameraControls',
@@ -10391,7 +10382,7 @@ var App = function () {
       this.scene.add(spotLight);
 
       var spotLightHelper = new THREE.SpotLightHelper(spotLight);
-      this.scene.add(spotLightHelper);
+      //this.scene.add(spotLightHelper);
     }
   }, {
     key: 'addAmbientLight',
