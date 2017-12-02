@@ -41,23 +41,8 @@ class App {
       this.thirdRing = new THREE.Object3D();
       this.fourthRing = new THREE.Object3D();
 
-      this.btnPlay = document.querySelector('.play');
-      this.btnPause = document.querySelector('.pause');
-
-      this.btnPlay.addEventListener('click', () => {
-        this.audioElement.play();
-        this.btnPlay.classList.remove('control-show');
-        this.btnPause.classList.add('control-show');
-
-      });
-
-      this.btnPause.addEventListener('click', () => {
-        this.audioElement.pause();
-        this.btnPause.classList.remove('control-show');
-        this.btnPlay.classList.add('control-show');
-      });
-
       this.setupAudio();
+      this.addSoundControls();
       this.createScene();
       this.createCamera();
       this.addAmbientLight();
@@ -75,6 +60,24 @@ class App {
 
       this.playSound(file);
     }, 200);
+  }
+
+  addSoundControls() {
+    this.btnPlay = document.querySelector('.play');
+    this.btnPause = document.querySelector('.pause');
+
+    this.btnPlay.addEventListener('click', () => {
+      this.audioElement.play();
+      this.btnPlay.classList.remove('control-show');
+      this.btnPause.classList.add('control-show');
+
+    });
+
+    this.btnPause.addEventListener('click', () => {
+      this.audioElement.pause();
+      this.btnPause.classList.remove('control-show');
+      this.btnPlay.classList.add('control-show');
+    });
   }
 
   createRingOfSquares(count, radius, color, group) {
