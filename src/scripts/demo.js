@@ -10,6 +10,7 @@ class App {
       this.progress(percent);
     });
 
+    this.playIntro = document.querySelector('.play-intro');
     this.loaderBar = document.querySelector('.loader');
 
     this.loader.load('demo.mp3');
@@ -27,6 +28,7 @@ class App {
     if (percent === 100) {
       setTimeout(() => {
         requestAnimationFrame(() => {
+          this.playIntro.classList.add('control-show');
           this.loaderBar.classList.add('removeLoader');
           this.loaderBar.style.transform = 'scale(1, 0)';
         })
@@ -235,6 +237,19 @@ class App {
     this.moveRingGroup(this.fourthRing, -.02);
   }
 
+  play() {
+    this.audioCtx.resume();
+    this.audioElement.play();
+    this.btnPlay.classList.remove('control-show');
+    this.btnPause.classList.add('control-show');
+  }
+
+  pause() {
+    this.audioElement.pause();
+    this.btnPause.classList.remove('control-show');
+    this.btnPlay.classList.add('control-show');
+  }
+
   setupAudio() {
     this.audioElement = document.getElementById('audio');
     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -261,14 +276,14 @@ class App {
   }
 
   playSound(file) {
-
     setTimeout(() => {
-      this.audioElement.src = file;
-      this.audioElement.load();
-      this.audioElement.play();
+      this.playIntro.addEventListener('click', (evt)=>{
+        evt.currentTarget.classList.remove('control-show');
+        this.play();
+      });
 
-      this.playing = true;
-    }, 1000);
+      this.audioElement.src = file;
+    }, 500);
   }
 }
 
