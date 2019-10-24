@@ -15,7 +15,7 @@
   "author": "Ion D. Filho <iondrimba@gmail.com> (https://iondrimbafilho.me)",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.6.2",
+    "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
     "babel-core": "^6.7.0",
     "babel-loader": "^8.0.6",
@@ -36,7 +36,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "three": "^0.108.0",
+    "three": "^0.109.0",
     "threejs-controls": "^1.0.6"
   }
 }
